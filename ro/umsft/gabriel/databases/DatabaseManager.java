@@ -37,7 +37,7 @@ public class DatabaseManager {
 
     // Updates a news item, the key (source, url) identifies which row to change
     public static void updateNews(News news) {
-        news.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));
+        news.touch();
         String sql = "UPDATE news SET title = ?, description = ?, author = ?,"
                 + " publisher = ?, publish_date = ?, last_modified_date = ?,"
                 + " language = ?, cover_image = ? WHERE source = ? AND url = ?";
@@ -231,7 +231,7 @@ public class DatabaseManager {
     
     // Updates an event, the key (title, event_datetime, location) identifies the row
     public static void updateEvent(Event event) {
-        event.setLastModifiedDate(new Timestamp(System.currentTimeMillis()));
+        event.touch();
         String sql = "UPDATE events SET description = ?, source = ?, author = ?,"
                 + " publisher = ?, publish_date = ?, url = ?, last_modified_date = ?,"
                 + " language = ?, cover_image = ? "

@@ -13,16 +13,16 @@ import java.sql.Timestamp;
 public abstract class ContentItem {
     
     //Declaring the class's fields
-    private String title;
+    private final String title;
     private String description;
-    private String source;
+    private final String source;
     private String author;
     private String publisher;
     private Timestamp publishDate;
-    private String url;
-    private Timestamp creationDate;
+    private final String url;
+    private final Timestamp creationDate;
     private Timestamp lastModifiedDate;
-    private String language;
+    private final String language;
     private String coverImage;
     
     public ContentItem(String title, String description,
@@ -71,17 +71,22 @@ public abstract class ContentItem {
     public String getLanguage(){return language;}
     public String getCoverImage(){return coverImage;}
     
-    //setters
-    public void setTitle(String title){this.title = title;}
-    public void setDescription(String description){this.description = description;}
-    public void setSource(String source){this.source = source;}
-    public void setAuthor(String author){this.author = author;}
-    public void setPublisher(String publisher){this.publisher = publisher;}
-    public void setPublishDate(Timestamp publishDate){this.publishDate = publishDate;}
-    public void setUrl(String url){this.url = url;}
-    public void setLanguage(String language){this.language = language;}
-    public void setCoverImage(String coverImage){this.coverImage = coverImage;}
-    public void setLastModifiedDate(Timestamp lastModifiedDate){this.lastModifiedDate = lastModifiedDate;}
+    
+    public void touch()
+    {
+        this.lastModifiedDate = new Timestamp(System.currentTimeMillis());
+    }
+    
+    public void updateContent(String description,
+            String author, String publisher,
+            String coverImage)
+    {
+        this.description = description;
+        this.author = author;
+        this.publisher = publisher;
+        this.coverImage = coverImage;
+        touch();
+    }
     
     @Override
     public String toString()
