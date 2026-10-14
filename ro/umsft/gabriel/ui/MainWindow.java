@@ -64,22 +64,29 @@ public class MainWindow extends JFrame{
         add(buildSplitPane(), BorderLayout.CENTER);
         newsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        /*
         newsList.setCellRenderer(new DefaultListCellRenderer()
+        {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list,
+                    Object value, int index, boolean isSelected,
+                    boolean cellHasFocus)
+            {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                
+                if(value instanceof News)
                 {
-                    @Override
-                    public Component getListCellRendererComponent(JList<?> list, Object value,
-                            int index, boolean isSelected, boolean cellHasFocus)
-                    {
-                        JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                        News news = (News) value;
-                        String title = news.getTitle().replace("&", "&amp;").replace("<", "&lt;");
-                        label.setText("<html><div style='width:290px'><b>" + title + "</b><br>"
-                        + "<span style='color:gray'>" + news.getSource() + "</span></div></html>");
-                        label.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
-                        return label;
-                    }
-                });*/
+                    News news = (News) value;
+                    
+                    String title = news.getTitle().replace("&", "&amp;").replace("<", "&lt;");
+                    
+                    label.setText("<html><div style='width:280px'><b>" + title + "</b><br>"
+                    + "<span style='color:gray; font-size:9px;'>" + news.getSource() + "</span></div></html>");
+                    
+                    label.setBorder(BorderFactory.createEmptyBorder(6, 8, 6, 8));
+                }
+                return label;
+            }
+        });
         newsList.addListSelectionListener(e -> {
             if(!e.getValueIsAdjusting()){
                 showDetails(newsList.getSelectedValue());
