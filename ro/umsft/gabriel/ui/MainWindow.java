@@ -160,6 +160,22 @@ public class MainWindow extends JFrame{
         detailPanel.repaint();
     }
     
+    private void addFormRow(JPanel panel, int row, String labelText, JComponent field)
+    {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = row;
+        c.insets = new Insets(4, 4, 4, 4);
+        
+        c.gridx = 0;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        panel.add(new JLabel(labelText), c);
+        
+        c.gridx = 1;
+        c.weightx = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(field, c);
+    }
+    
     private News showNewsForm(News existing)
     {
         JTextField title = new JTextField();
@@ -192,14 +208,14 @@ public class MainWindow extends JFrame{
             url.setEditable(false);
         }
         
-        JPanel panel = new JPanel(new GridLayout(0, 2, 4, 4));
-        panel.add(new JLabel("Title:"));panel.add(title);
-        panel.add(new JLabel("Description:")); panel.add(new JScrollPane(description));
-        panel.add(new JLabel("Source:")); panel.add(source);
-        panel.add(new JLabel("Author:")); panel.add(author);
-        panel.add(new JLabel("Publisher:")); panel.add(publisher);
-        panel.add(new JLabel("URL:")); panel.add(url);
-        panel.add(new JLabel("Language:")); panel.add(language);   
+        JPanel panel = new JPanel(new GridBagLayout());
+        addFormRow(panel, 0, "Title:", title);
+        addFormRow(panel, 1, "Description:", new JScrollPane(description));
+        addFormRow(panel, 2, "Source:", source);
+        addFormRow(panel, 3, "Author:", author);
+        addFormRow(panel, 4, "Publisher:", publisher);
+        addFormRow(panel, 5, "URL:", url);
+        addFormRow(panel, 6, "Language:", language);   
         
         int result = JOptionPane.showConfirmDialog(
             this, panel, existing == null ? "Add news" : "Edit news",
