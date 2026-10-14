@@ -7,6 +7,7 @@ package ro.umsft.gabriel;
 import ro.umsft.gabriel.databases.Database;
 import ro.umsft.gabriel.service.NewsService;
 import ro.umsft.gabriel.ui.MainWindow;
+import ro.umsft.gabriel.repository.*;
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.Color;
@@ -37,7 +38,8 @@ public class NewsReader {
         }
         
         new Database().createTables();
-        NewsService newsService = new NewsService();
+        NewsRepository repository = new SQLiteNewsRepository();
+        NewsService newsService = new NewsService(repository);
         SwingUtilities.invokeLater(() -> new MainWindow(newsService).setVisible(true));
     }
 }

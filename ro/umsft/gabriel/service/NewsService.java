@@ -5,7 +5,7 @@
 package ro.umsft.gabriel.service;
 
 import java.util.*;
-import ro.umsft.gabriel.databases.DatabaseManager;
+import ro.umsft.gabriel.repository.NewsRepository;
 import ro.umsft.gabriel.news.News;
 import ro.umsft.gabriel.rss.RSSReader;
 import ro.umsft.gabriel.rss.RSSSource;
@@ -18,6 +18,13 @@ import ro.umsft.gabriel.rss.RSSSource;
 // Coordinates RSS downloading and database access for the UI
 public class NewsService {
     
+    private final NewsRepository repo;
+    
+    public NewsService(NewsRepository repo)
+    {
+        this.repo = repo;
+    }
+    
     // Downloads every RSS source and saves the news into the database
     private void downloadAllNews()
     {
@@ -28,7 +35,7 @@ public class NewsService {
             System.out.println("Source name: " + source.getName() + "   " + fetched.size() + " news was fetched");
             for(News news : fetched)
             {
-                DatabaseManager.insertNews(news);
+                repo.add(news);
             }
         }
     }
@@ -36,12 +43,12 @@ public class NewsService {
     // Loads the news from SQLite, downloads from RSS only if the database is empty
     public List<News> loadNews()
     {
-        List<News> newsList = DatabaseManager.getAllNews();
+        List<News> newsList = repo.findAll();
         if(newsList.isEmpty())
         {
             System.out.println("First start, downloading the news ...");
             downloadAllNews();
-            newsList = DatabaseManager.getAllNews();
+            newsList = repo.findAll();
         }
         return newsList;
     }
@@ -49,43 +56,43 @@ public class NewsService {
     public List<News> refresh()
     {
         downloadAllNews();
-        return DatabaseManager.getAllNews();
+        return repo.findAll();
     }
     
     public List<News> search(String keyword)
     {
         if(keyword == null || keyword.isBlank())
         {
-            return DatabaseManager.getAllNews();
+            return repo.findAll();
         }
         else
         {
-            return DatabaseManager.searchNews(keyword.trim());
+            return repo.search(keyword.trim());
         }
     }
     
     public void addNews(News news)
     {
-        DatabaseManager.insertNews(news);
+        repo.add(news);
     }
     
     public void updateNews(News news)
     {
-        DatabaseManager.updateNews(news);
+        repo.update(news);
     }
     
     public void deleteNews(News news)
     {
-        DatabaseManager.deleteNews(news.getSource(), news.getUrl());
+        repo.delete(news.getSource(), news.getUrl());
     }
     
     public void clearAll()
     {
-        DatabaseManager.clearAll();
+        repo.clearAll();
     }
     
     public List<News> getAllNews()
     {
-        return DatabaseManager.getAllNews();
+        return repo.findAll();
     }
 }
